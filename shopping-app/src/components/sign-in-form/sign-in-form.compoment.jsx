@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import {
   signInWithGooglePopup,
-  createUserDocumentFromAuth,
   signInAuthUserWithEmailAndPassword,
 } from "../../utils/firebase/firebase.utils";
 
@@ -20,9 +19,8 @@ const SignInForm = () => {
   const { email, password } = formFields;
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    const userDocRef = await createUserDocumentFromAuth(user);
-    console.log(userDocRef);
+    await signInWithGooglePopup();
+    //console.log(userDocRef);
   };
 
   const resetForm = () => {
@@ -38,19 +36,17 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      const response = await signInAuthUserWithEmailAndPassword(
-        email,
-        password
-      );
-      console.log(response);
+      await signInAuthUserWithEmailAndPassword(email, password);
       resetForm();
     } catch (error) {
       switch (error.code) {
         case "auth/wrong-password":
           alert("Password Incorrect, Please enter a valid password");
+          resetForm();
           break;
         case "auth/user-not-found":
           alert("User Invalid, Please check your Email Id");
+          resetForm();
           break;
         case "auth/popup-closed-by-user":
           alert("popUp closed....  Please SignIn again");
